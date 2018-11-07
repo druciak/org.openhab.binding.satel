@@ -364,7 +364,7 @@ end
 
 In version 2.x of the binding all 'module' channels have been removed. You can easily replace them with the following configuration:
 
-### satel.items
+#### satel.items
 
 ```
 Switch MODULE_CONNECTED "Connection status" <network> (Satel)
@@ -372,7 +372,7 @@ DateTime MODULE_CONNECTED_SINCE "Connection established at [%1$tF %1$tR]" <time>
 Number MODULE_CONNECTION_ERRORS "Connection errors [%d]" (Satel)
 ```
 
-### satel.rules
+#### satel.rules
 
 ```
 rule "Satel bridge changed to ONLINE"
