@@ -360,6 +360,12 @@ end
 
 ## Migration from 1.x version of the binding
 
+### binary items
+
+In OH2.x all channels have strict types, which means you cannot use other type then designated for a channel. 
+In Satel binding all binary items are now of 'Switch' type. Using other item types, like 'Contact' is not possible in this version of the binding.
+For this reason, when migrating 1.x item files, besides changing binding configuration for each item, you must replace all 'Contact' items to 'Switch'  
+
 ### 'module' channels
 
 In version 2.x of the binding all 'module' channels have been removed. You can easily replace them with the following configuration:
