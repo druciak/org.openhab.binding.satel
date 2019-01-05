@@ -199,9 +199,9 @@ Thing event-log EventLog [ ]
 
 ### shutter
 
-| Name  | Type          | Description          |
-|-------|---------------|----------------------|
-| state | Rollershutter | State of the shutter |
+| Name          | Type          | Description          |
+|---------------|---------------|----------------------|
+| shutter_state | Rollershutter | State of the shutter |
 
 ### system
 
@@ -223,7 +223,8 @@ Thing event-log EventLog [ ]
 | index       | Number   | Index of the current record in the event log. Send '-1' to get most recent record.     |
 | prev_index  | Number   | Index of the previous record in the event log. Use this value to iterate over the log. |
 | timestamp   | DateTime | Date and time when the event happened.                                                 |
-| description | Switch   | Textual description of the event.                                                      |
+| description | String   | Textual description of the event.                                                      |
+| details     | String   | Details about the event, usually list of objects related to the event.                 |
 
 ## Full Example
 
@@ -253,7 +254,7 @@ Switch LIVING_ALARM "Intruder in living room" (Satel) { channel="satel:zone:home
 Switch BEDROOM_TAMPER "Bedroom PIR tampered" (Satel) { channel="satel:zone:home:BedroomPIR:tamper_alarm" }
 Switch BEDROOM_TAMPER_M "Bedroom PIR tamper memory" (Satel) { channel="satel:zone:home:BedroomPIR:tamper_alarm_memory" }
 Switch KITCHEN_LAMP "Kitchen lamp" (Satel) { channel="satel:output:home:KitchenLamp:state" }
-Rollershutter KITCHEN_BLIND "Kitchen blind" (Satel) { channel="satel:shutter:home:KitchenWindow:state" }
+Rollershutter KITCHEN_BLIND "Kitchen blind" (Satel) { channel="satel:shutter:home:KitchenWindow:shutter_state" }
 Switch SYSTEM_TROUBLES "Troubles in the system" (Satel) { channel="satel:system:home:System:troubles" }
 String KEYPAD_CHAR ">" <none> (Satel)
 String USER_CODE "User code" (Satel) { channel="satel:system:home:System:user_code" }
@@ -261,6 +262,7 @@ Number EVENT_LOG_IDX "Event log - current index [%d]" (Satel) { channel="satel:e
 Number EVENT_LOG_PREV "Event log - previous index [%d]" (Satel) { channel="satel:event-log:home:EventLog:prev_index" }
 DateTime EVENT_LOG_TIME "Event log - time [%1$tF %1$tR]" (Satel) { channel="satel:event-log:home:EventLog:timestamp" }
 String EVENT_LOG_DESCR "Event log - description [%s]" (Satel) { channel="satel:event-log:home:EventLog:description" }
+String EVENT_LOG_DET "Event log - details [%s]" (Satel) { channel="satel:event-log:home:EventLog:details" }
 ```
 
 ### satel.sitemap
@@ -351,7 +353,7 @@ then
     } else if (eventLogCounter == 30) {
         sendMail("my@address.net", "Alarm system log", eventLogMsgBody)
     } else {
-        eventLogMsgBody += "\n" + (EVENT_LOG_TIME.state as DateTimeType).format("%1$tF %1$tR") + ": " + EVENT_LOG_DESCR.state
+        eventLogMsgBody += "\n" + (EVENT_LOG_TIME.state as DateTimeType).format("%1$tF %1$tR") + ": " + EVENT_LOG_DESCR.state + ", " + EVENT_LOG_DET.state
         eventLogCounter += 1
         EVENT_LOG_IDX.sendCommand(EVENT_LOG_PREV.state)
     }
@@ -364,7 +366,7 @@ end
 
 In OH2.x all channels have strict types, which means you cannot use other type then designated for a channel. 
 In Satel binding all binary items are now of 'Switch' type. Using other item types, like 'Contact' is not possible in this version of the binding.
-For this reason, when migrating 1.x item files, besides changing binding configuration for each item, you must replace all 'Contact' items to 'Switch'  
+For this reason, when migrating 1.x item files, besides changing binding configuration for each item, you must replace all 'Contact' items to 'Switch' type.  
 
 ### 'module' channels
 
