@@ -353,7 +353,10 @@ then
     } else if (eventLogCounter == 30) {
         sendMail("my@address.net", "Alarm system log", eventLogMsgBody)
     } else {
-        eventLogMsgBody += "\n" + (EVENT_LOG_TIME.state as DateTimeType).format("%1$tF %1$tR") + ": " + EVENT_LOG_DESCR.state + ", " + EVENT_LOG_DET.state
+		eventLogMsgBody += "\n" + (EVENT_LOG_TIME.state as DateTimeType).format("%1$tF %1$tR") + ": " + EVENT_LOG_DESCR.state
+		if (EVENT_LOG_DET.state != NULL && EVENT_LOG_DET.state != "") {
+			 eventLogMsgBody += " - " + EVENT_LOG_DET.state
+		}
         eventLogCounter += 1
         EVENT_LOG_IDX.sendCommand(EVENT_LOG_PREV.state)
     }
